@@ -193,9 +193,6 @@ class ducksPlay {
 
 play1 = new ducksPlay;
 // play2 = new wordsPlay;
-function draw() {
-    ctx.drawImage(bird, 0, 0, 256, 220, 0, 0, cvs.width, cvs.height);
-}
 
 var calibration_step = 0;
 var calibration_top_left;
@@ -320,7 +317,8 @@ function run() {
             }
             else {
                 // project(aim_vector)
-                draw_aim(project(aim_vector));
+                // draw_aim(project(aim_vector));
+                play1.draw(calibration(aim_vector));
             }
         }
         else {

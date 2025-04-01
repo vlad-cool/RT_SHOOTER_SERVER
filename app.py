@@ -8,7 +8,7 @@ import vectors
 
 app = flask.Flask(__name__)
 
-vec_viz = vectors.VectorVisualizer()
+# vec_viz = vectors.?VectorVisualizer()
 
 JS_DIR = os.path.join(app.static_folder, "js")
 
@@ -34,8 +34,8 @@ class Vector:
     def __truediv__(self, scalar):
         return Vector(self.x / scalar, self.y / scalar, self.z / scalar)
 
-aims: list[Aim] = [Aim(), Aim()]
-raw_vectors: list[Vector] = []
+aims = [Aim(), Aim()]
+raw_vectors = []
 aim_vector = Vector(0, 0, 0)
 
 filter_window = [0.4, 0.7, 1.0]
@@ -97,7 +97,7 @@ def get_vector():
     
     aim_vector = filter(raw_vectors, filter_window)
     
-    vec_viz.draw_vector(aim_vector.x, aim_vector.y, aim_vector.z)
+    # vec_viz.draw_vector(aim_vector.x, aim_vector.y, aim_vector.z)
     
     return "ok"
 

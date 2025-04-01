@@ -199,7 +199,7 @@ ctx.imageSmoothingEnabled = false;
 var k = { x: window.innerHeight / 240, y: window.innerWidth / 256 };
 
 class Ufo {
-    
+
     x;
     y;
     type;
@@ -207,7 +207,7 @@ class Ufo {
     bird = new Image();
     w;
     h;
-    
+
     constructor(x, y, dir, type, w, h, img) {
         this.x = x;
         this.y = y;
@@ -219,73 +219,73 @@ class Ufo {
     }
 
     collisionCheck() {
-        if ((aimxy.x > this.x && aimxy.x < this.x + this.w*k.x) && 
-            (aimxy.y > this.y && aimxy.y < this.y + this.h*k.x)) {
+        if ((aimxy.x > this.x && aimxy.x < this.x + this.w * k.x) &&
+            (aimxy.y > this.y && aimxy.y < this.y + this.h * k.x)) {
             return true;
         }
         return false;
     }
 
     flyDuck() {
-        if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -this.h*k.y)) {
+        if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -this.h * k.y)) {
             this.x = -50;
             this.y = -50;
         }
         if ((aimxy.press === true) && this.collisionCheck() && (this.type < 2)) {
             this.type = 2;
         } else if (aimxy.press === true) {
-            this.dir = (this.dir + 1)%4;
+            this.dir = (this.dir + 1) % 4;
         }
         if (this.type === 100) {
-            ctx.drawImage(this.bird, 260, 0, 25, 40, this.x, this.y, this.w*k.x, this.h*k.x);
+            ctx.drawImage(this.bird, 260, 0, 25, 40, this.x, this.y, this.w * k.x, this.h * k.x);
             this.y = (this.y + 3);
         } else if (this.type > 1) {
-            ctx.drawImage(this.bird, 220, 0, 36, 40, this.x, this.y, this.w*k.x, this.h*k.x);
+            ctx.drawImage(this.bird, 220, 0, 36, 40, this.x, this.y, this.w * k.x, this.h * k.x);
             this.type = this.type + 1;
         } else {
-            ctx.drawImage(this.bird, 0 + this.type*110, 0, 36, 40, this.x, this.y, this.w*k.x, this.h*k.x);
+            ctx.drawImage(this.bird, 0 + this.type * 110, 0, 36, 40, this.x, this.y, this.w * k.x, this.h * k.x);
             if (this.type === 0) {
-                this.x = (this.x+1-this.dir%3);
-                this.y = (this.y-1);
+                this.x = (this.x + 1 - this.dir % 3);
+                this.y = (this.y - 1);
             } else if (this.type === 1) {
-                this.x = (this.x+2);
-                this.y = (this.y-this.dir%4);
-            }   
+                this.x = (this.x + 2);
+                this.y = (this.y - this.dir % 4);
+            }
         }
-    } 
+    }
 };
 
 class Duck extends Ufo {
 
     fly;
     col;
-    
+
     constructor(x, y, fly, col, type, dir) {
-        super(x, y, type, dir, 36, 40, "/img/ducks.png" )
+        super(x, y, type, dir, 36, 40, "/img/ducks.png")
         this.fly = fly;
         this.col = col;
     }
-    
+
     flyDuck() {
-        if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -this.h*k.y)) {
-            this.x = (this.x-300*(this.type + 1))*(this.type - 1)%cvs.width;
-            this.type = this.type%2;
-            this.y = cvs.height-this.type*3*cvs.height/4;
-            this.col = (this.col + 1)%3; 
+        if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -this.h * k.y)) {
+            this.x = (this.x - 300 * (this.type + 1)) * (this.type - 1) % cvs.width;
+            this.type = this.type % 2;
+            this.y = cvs.height - this.type * 3 * cvs.height / 4;
+            this.col = (this.col + 1) % 3;
         }
         if ((aimxy.press === true) && this.collisionCheck() && (this.type < 2)) {
             this.type = 2;
         } else if (aimxy.press === true) {
-            this.dir = (this.dir + 1)%4;
+            this.dir = (this.dir + 1) % 4;
         }
         if (this.type === 100) {
-            ctx.drawImage(this.bird, 260-this.col-(1-this.col%2)*this.col/2, 0 + this.col*44, 25, 40, this.x, this.y, this.w*k.x, this.h*k.x);
+            ctx.drawImage(this.bird, 260 - this.col - (1 - this.col % 2) * this.col / 2, 0 + this.col * 44, 25, 40, this.x, this.y, this.w * k.x, this.h * k.x);
             this.y = (this.y + 3);
         } else if (this.type > 1) {
-            ctx.drawImage(this.bird, 220-this.col-(1-this.col%2)*this.col/2, 0 + this.col*44, 36, 40, this.x, this.y, this.w*k.x, this.h*k.x);
+            ctx.drawImage(this.bird, 220 - this.col - (1 - this.col % 2) * this.col / 2, 0 + this.col * 44, 36, 40, this.x, this.y, this.w * k.x, this.h * k.x);
             this.type = this.type + 1;
         } else {
-            ctx.drawImage(this.bird, 0 + (this.fly-this.fly%10)/10*36-this.col-(1-this.col%2)*this.col/2 + this.type*110, 0 + this.col*40, 36, 40, this.x, this.y, this.w*k.x, this.h*k.x);
+            ctx.drawImage(this.bird, 0 + (this.fly - this.fly % 10) / 10 * 36 - this.col - (1 - this.col % 2) * this.col / 2 + this.type * 110, 0 + this.col * 40, 36, 40, this.x, this.y, this.w * k.x, this.h * k.x);
             if (this.type === 0) {
                 this.x = (this.x + 1 - this.dir % 3);
                 this.y = (this.y - 1);
@@ -299,29 +299,29 @@ class Duck extends Ufo {
 };
 
 class WordChoice extends Ufo {
-    
+
     def;
     words;
     len;
 
     constructor(x, y, type, dir, def, words) {
-        super(x, y, type, dir, 15, 40, "/img/frame.png" );
+        super(x, y, type, dir, 15, 40, "/img/frame.png");
         this.h = 15;
         this.w = 40;
-        this.img = 
-        this.def = ["?"];
+        this.img =
+            this.def = ["?"];
         this.words = ["apple", "pearpear", "banananana", "watermelon"];
         this.len = 4;
     }
 
     flyDuck() {
 
-        for (var i=0; i<this.len; i++) {
+        for (var i = 0; i < this.len; i++) {
             ctx.font = "32px serif";
-            ctx.drawImage(this.bird, 1, 1, 38, 14, (cvs.width - this.w*k.x) * (i % (this.len/2)+1) / (this.len / 2 + 1), (cvs.height - this.h*k.y*2) * (Math.floor(i/2) + 1) / (3)-this.h*k.y/3*2, this.w*k.x*1.5, this.h*k.y);
-            ctx.fillText(this.words[i], (cvs.width - this.w*k.x) * (i%(this.len/2)+1) / (this.len / 2 + 1)+this.w*k.x/10, (cvs.height - this.h*k.y*2) * (Math.floor(i/2) + 1) / (3));
+            ctx.drawImage(this.bird, 1, 1, 38, 14, (cvs.width - this.w * k.x) * (i % (this.len / 2) + 1) / (this.len / 2 + 1), (cvs.height - this.h * k.y * 2) * (Math.floor(i / 2) + 1) / (3) - this.h * k.y / 3 * 2, this.w * k.x * 1.5, this.h * k.y);
+            ctx.fillText(this.words[i], (cvs.width - this.w * k.x) * (i % (this.len / 2) + 1) / (this.len / 2 + 1) + this.w * k.x / 10, (cvs.height - this.h * k.y * 2) * (Math.floor(i / 2) + 1) / (3));
         }
-        
+
     }
 
 };
@@ -340,16 +340,16 @@ class wordsPlay {
     draw() {
         ctx.drawImage(this.bg, 0, 0, 256, 220, 0, 0, cvs.width, cvs.height);
         this.ufo.flyDuck();
-        ctx.drawImage(this.aim, aimxy.x-aim.width/2, aimxy.y-aim.height/2);
-    } 
+        ctx.drawImage(this.aim, aimxy.x - aim.width / 2, aimxy.y - aim.height / 2);
+    }
 };
 
 class ufosPlay {
 
-    ufos = [new Ufo(cvs.width/4, cvs.height,   0, 0, 0, 1),
-             new Duck(0,           cvs.height/4, 0, 1, 1, 0),
-             new Duck(cvs.width/8, cvs.height,   0, 2, 0, 0),
-             new Duck(cvs.width/8, cvs.height/4, 0, 2, 2, 0)];
+    ufos = [new Ufo(cvs.width / 4, cvs.height, 0, 0, 0, 1),
+    new Duck(0, cvs.height / 4, 0, 1, 1, 0),
+    new Duck(cvs.width / 8, cvs.height, 0, 2, 0, 0),
+    new Duck(cvs.width / 8, cvs.height / 4, 0, 2, 2, 0)];
 
     bg = new Image();
     bgt = new Image();
@@ -364,11 +364,12 @@ class ufosPlay {
         ctx.drawImage(this.bg, 0, 0, 256, 220, 0, 0, cvs.width, cvs.height);
         this.ufos.forEach(ufo => ufo.flyDuck());
         ctx.drawImage(this.bgt, 0, 0, 256, 190, 0, 0, cvs.width, cvs.height);
-        ctx.drawImage(this.aim, aimxy.x-aim.width/2, aimxy.y-aim.height/2);
-    } 
+        ctx.drawImage(this.aim, aimxy.x - aim.width / 2, aimxy.y - aim.height / 2);
+    }
 };
 
 var GAME = "GAME_2"
+var DISABLE_CALIBRATION = true;
 
 play1 = new ufosPlay;
 play2 = new wordsPlay;
@@ -385,32 +386,37 @@ function run() {
 
             // console.log(aim_vector);
 
-            if (calibration_step < 5) {
+            if (!DISABLE_CALIBRATION && calibration_step < 5) {
                 calibration(aim_vector);
             }
-            else if (calibration_step == 5) {
+            else if (DISABLE_CALIBRATION || calibration_step == 5) {
                 switch (GAME) {
                     case "TEST":
                         setInterval(function () { draw_aim() }, 16);
                         break;
                     case "EXTRA_WORD":
                         game = new ExtraWordGame();
-                        // game.prepare();
                         setInterval(function () { game.draw() }, 16);
                         break;
                     case "GAME_2":
-                        setInterval(function() {play2.draw()}, 16);
+                        setInterval(function () { play2.draw() }, 16);
                         break;
                 }
                 calibration_step = 6;
             }
             else {
-
-                var old_press = aimxy.press;
-                var press = aim_vector.press
-                aimxy = project(aim_vector);
-                aimxy.press = press;
-                aimxy.hold = old_press;
+                if (!DISABLE_CALIBRATION) {
+                    aimxy = project(aim_vector);
+                    var old_press = aimxy.press;
+                    var press = aim_vector.press
+                    aimxy.press = press;
+                    aimxy.hold = old_press;
+                }
+                else
+                {
+                    aimxy.press = false;
+                    aimxy.hold = false;
+                }
                 console.log(aimxy.press, aimxy.hold);
             }
             // else {

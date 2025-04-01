@@ -8,6 +8,12 @@ import vectors
 
 app = flask.Flask(__name__)
 
+app.config.update(
+    ENV='production',
+    DEBUG=False,
+    TESTING=False,
+)
+
 DRAW_VECTORS = False
 
 if DRAW_VECTORS:
@@ -15,25 +21,28 @@ if DRAW_VECTORS:
 
 class Aim:
     def __init__(self):
-        self.x = 500
-        self.y = 500
+        self.x = 0
+        self.y = 0
+        self.z = 0
         self.press = False
         self.hold = False
 
 class Vector:
-    def __init__(self, x, y, z):
+    def __init__(self, x, y, z, press=False, hold=False):
         self.x = x
         self.y = y
         self.z = z
-        
+        self.press = press
+        self.hold = hold
+
     def __add__(self, other):
-        return Vector(self.x + other.x, self.y + other.y, self.z + other.z)
+        return Vector(self.x + other.x, self.y + other.y, self.z + other.z, other.press, other.hold)
     
     def __mul__(self, other):
-        return Vector(self.x * other, self.y * other, self.z * other)
+        return Vector(self.x * other, self.y * other, self.z * other, self.press, self.hold)
     
     def __truediv__(self, scalar):
-        return Vector(self.x / scalar, self.y / scalar, self.z / scalar)
+        return Vector(self.x / scalar, self.y / scalar, self.z / scalar, self.press, self.hold)
 
 aims = [Aim(), Aim()]
 raw_vectors = []
@@ -64,28 +73,29 @@ def motion_control():
 
 @app.route("/get_aim/<id>")
 def get_aim(id):
-    return json.dumps(aims[int(id)].__dict__)
+    ret_val = json.dumps(aims[int(id)].__dict__)
+    return ret_val
 
-@app.route("/set_aim/<id>", methods=["POST"])
-def set_aim(id):
-    id = int(id)
-    new_aim = json.loads(flask.request.get_data())
-    aims[id].x = int(new_aim["x"])
-    aims[id].y = int(new_aim["y"])
-    aims[id].press = bool(new_aim["press"])
-    aims[id].hold = bool(new_aim["hold"])
+# @app.route("/set_aim/<id>", methods=["POST"])
+# def set_aim(id):
+#     id = int(id)
+#     new_aim = json.loads(flask.request.get_data())
+#     aims[id].x = int(new_aim["x"])
+#     aims[id].y = int(new_aim["y"])
+#     aims[id].press = bool(new_aim["press"])
+#     aims[id].hold = bool(new_aim["hold"])
     
-    print(new_aim)
+#     print(new_aim)
     
-    return "ok"
+#     return "ok"
 
 @app.route("/js/<script>")
 def send_script(script):
-    return flask.send_file(f"js/{script}")
+    return flask.send_from_directory("js", script)
 
 @app.route("/img/<image>")
 def send_image(image):
-    return flask.send_file(f"img/{image}")
+    return flask.send_from_directory("img", image)
 
 @app.route("/send_vector", methods=["POST"])
 def get_vector():
@@ -95,8 +105,9 @@ def get_vector():
     x = data["x"]
     y = data["y"]
     z = data["z"]
+    press = data["press"]
         
-    raw_vectors.append(Vector(x, y, z))
+    raw_vectors.append(Vector(x, y, z, False, False))
     if len(raw_vectors) > len(filter_window):
         raw_vectors = raw_vectors[len(filter_window) - len(raw_vectors) : ]
     
@@ -104,6 +115,17 @@ def get_vector():
     
     if DRAW_VECTORS:
         vec_viz.draw_vector(aim_vector.x, aim_vector.y, aim_vector.z)
+    
+    if press:
+        aim_vector.hold = aims[0].press
+        aim_vector.press = True
+    else:
+        aim_vector.press = False
+        aim_vector.hold = False
+    
+    # print(press,    aim_vector.press, aim_vector.hold)
+    
+    aims[0] = aim_vector
     
     return "ok"
 

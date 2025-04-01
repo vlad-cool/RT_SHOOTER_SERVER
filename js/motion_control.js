@@ -2,8 +2,7 @@ var acceleration = undefined;
 var direction = undefined;
 var direction_vector = [0, 0, 1];
 
-var tap = false;
-var hold = false;
+var press = false;
 
 window.addEventListener('devicemotion', (event) => {
     acceleration = event.accelerationIncludingGravity;
@@ -14,7 +13,6 @@ window.addEventListener('deviceorientationabsolute', (event) => {
 });
 
 function read_data() {
-    console.log("AAA");
     var alpha = direction.alpha * Math.PI / 180;
 
     var beta = Math.acos(acceleration.y / Math.sqrt(acceleration.x ** 2 + acceleration.y ** 2 + acceleration.z ** 2));
@@ -28,6 +26,7 @@ function read_data() {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/send_vector", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.timeout = 500; 
 
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -38,19 +37,18 @@ function read_data() {
     xhr.onerror = function () {
         console.error('Request failed');
     };
-    xhr.send(JSON.stringify({ x: direction_vector[0], y: direction_vector[1], z: direction_vector[2], tap: hold, hold: !tap && hold }));
-    tap = false;
+    xhr.send(JSON.stringify({ x: direction_vector[0], y: direction_vector[1], z: direction_vector[2], press: press }));
+    press = false;
 }
 
 document.addEventListener('touchstart', function (e) {
     console.log('Screen tapped at:', e.touches[0].clientX, e.touches[0].clientY);
-    tap = true;
-    hold = true;
+    press = true;
 });
 
 document.addEventListener('touchend', function (e) {
-    console.log('Screen tapped at:', e.touches[0].clientX, e.touches[0].clientY);
-    hold = false;
+    console.log('Screen released');
+    // press = false;
 });
 
-setInterval(read_data, 200);
+setInterval(read_data, 100);

@@ -9,7 +9,6 @@ struct Aim {
     y: f64,
     z: f64,
     press: bool,
-    hold: bool,
 }
 
 impl Default for Aim {
@@ -19,7 +18,6 @@ impl Default for Aim {
             y: 0.0,
             z: 0.0,
             press: false,
-            hold: false,
         }
     }
 }
@@ -161,7 +159,6 @@ async fn get_vector(
                 y: aim_vector.y,
                 z: aim_vector.z,
                 press: aim_vector.press,
-                hold: false,
             };
         }
         

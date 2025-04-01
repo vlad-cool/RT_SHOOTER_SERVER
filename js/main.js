@@ -309,7 +309,13 @@ function run() {
                 calibration_step = 6;
             }
             else {
+
+                var old_press = aimxy.press;
+                var press = aim_vector.press
                 aimxy = project(aim_vector);
+                aimxy.press = press;
+                aimxy.hold = old_press;
+                console.log(aimxy.press, aimxy.hold);
             }
             // else {
 

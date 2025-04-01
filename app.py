@@ -8,9 +8,10 @@ import vectors
 
 app = flask.Flask(__name__)
 
-# vec_viz = vectors.?VectorVisualizer()
+DRAW_VECTORS = False
 
-JS_DIR = os.path.join(app.static_folder, "js")
+if DRAW_VECTORS:
+    vec_viz = vectors.VectorVisualizer()
 
 class Aim:
     def __init__(self):
@@ -78,9 +79,13 @@ def set_aim(id):
     
     return "ok"
 
-@app.route("/js/motion_control.js")
-def send_script():
-    return flask.send_file("js/motion_control.js")
+@app.route("/js/<script>")
+def send_script(script):
+    return flask.send_file(f"js/{script}")
+
+@app.route("/img/<image>")
+def send_script(image):
+    return flask.send_file(f"img/{image}")
 
 @app.route("/send_vector", methods=["POST"])
 def get_vector():
@@ -97,7 +102,8 @@ def get_vector():
     
     aim_vector = filter(raw_vectors, filter_window)
     
-    # vec_viz.draw_vector(aim_vector.x, aim_vector.y, aim_vector.z)
+    if DRAW_VECTORS:
+        vec_viz.draw_vector(aim_vector.x, aim_vector.y, aim_vector.z)
     
     return "ok"
 

@@ -1,9 +1,3 @@
-const FONT_SIZE = 48;
-const FRAME_OFFSET = 20;
-const HITBOX_OFFSET = 5;
-const HORIZONTAL_SLOTS = 4;
-const VERTICAL_SLOTS = 5;
-
 function includes(a, b) {
     for (var i = 0; i < a.length; i++) {
         if (a[i][0] == b[0] && a[i][1] == b[1]) {
@@ -59,7 +53,7 @@ class ExtraWordGame {
         ctx.font = `${FONT_SIZE}px serif`;
         
         ctx.fillStyle = "blue";
-        ctx.fillText(`Score: ${this.score}`, 0, box_height / 2 + FONT_SIZE / 2);
+        ctx.fillText(`Score: ${this.score}`, (box_height - FONT_SIZE) / 2, box_height / 2 + FONT_SIZE / 2);
 
         for (var i = 0; i < this.word_group.length; i++) {
             var word = this.word_group[i];
@@ -94,7 +88,6 @@ class ExtraWordGame {
                     this.score = Math.max(0, this.score);
                     console.log("Bad Hit");
                 }
-                const current = new Date();
             }
         }
         ctx.drawImage(aim, aimxy.x - aim.width / 2, aimxy.y - aim.height / 2);

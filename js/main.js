@@ -368,7 +368,7 @@ class ufosPlay {
     } 
 };
 
-var GAME = "EXTRA_WORD"
+var GAME = "GAME_2"
 
 play1 = new ufosPlay;
 play2 = new wordsPlay;
@@ -398,6 +398,9 @@ function run() {
                         // game.prepare();
                         setInterval(function () { game.draw() }, 16);
                         break;
+                    case "GAME_2":
+                        setInterval(function() {play2.draw()}, 16);
+                        break;
                 }
                 calibration_step = 6;
             }
@@ -423,6 +426,5 @@ function run() {
 }
 
 aimxy = { x: 200, y: 180, press: true, hold: true };
-setInterval(function() {play2.draw()}, 16);
 setInterval(run, 100);
 

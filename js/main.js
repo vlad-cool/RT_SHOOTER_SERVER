@@ -318,7 +318,7 @@ function run() {
             else {
                 // project(aim_vector)
                 // draw_aim(project(aim_vector));
-                play1.draw(calibration(aim_vector));
+                play1.draw(project(aim_vector));
             }
         }
         else {

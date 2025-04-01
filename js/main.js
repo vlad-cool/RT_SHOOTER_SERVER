@@ -124,16 +124,12 @@ function project(aim_vector) {
     y = Math.min(y, 1);
     y = Math.floor(y * cvs.height);
 
-    console.log(x, y);
-
-    return {x: x, y: y};
+    return { x: x, y: y };
 }
 
 function calibration(aim_vector) {
-    console.log(calibration_step);
     switch (calibration_step) {
         case 0:
-            console.log("Starting step 0")
             ctx.fillStyle = "red";
             ctx.fillRect(0, 0, 100, 100);
             ctx.fillStyle = "blue";
@@ -144,7 +140,6 @@ function calibration(aim_vector) {
             break;
         case 1:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 1")
                 calibration_top_left = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -158,7 +153,6 @@ function calibration(aim_vector) {
             break;
         case 2:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 2")
                 calibration_top_right = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -172,7 +166,6 @@ function calibration(aim_vector) {
             break;
         case 3:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 3")
                 calibration_bottom_right = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -186,7 +179,6 @@ function calibration(aim_vector) {
             break;
         case 4:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 4")
                 calibration_bottom_left = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -204,7 +196,7 @@ cvs.height = window.innerHeight; //координаты будут верные 
 cvs.width = window.innerWidth;
 var ctx = cvs.getContext("2d");
 ctx.imageSmoothingEnabled = false;
-var k = {x: window.innerHeight/240, y: window.innerWidth/256};
+var k = { x: window.innerHeight / 240, y: window.innerWidth / 256 };
 
 class Ufo {
     
@@ -225,7 +217,7 @@ class Ufo {
         this.h = h;
         this.bird.src = img;
     }
-    
+
     collisionCheck() {
         if ((aimxy.x > this.x && aimxy.x < this.x + this.w*k.x) && 
             (aimxy.y > this.y && aimxy.y < this.y + this.h*k.x)) {
@@ -233,7 +225,7 @@ class Ufo {
         }
         return false;
     }
-    
+
     flyDuck() {
         if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -this.h*k.y)) {
             this.x = -50;
@@ -295,15 +287,15 @@ class Duck extends Ufo {
         } else {
             ctx.drawImage(this.bird, 0 + (this.fly-this.fly%10)/10*36-this.col-(1-this.col%2)*this.col/2 + this.type*110, 0 + this.col*40, 36, 40, this.x, this.y, this.w*k.x, this.h*k.x);
             if (this.type === 0) {
-                this.x = (this.x+1-this.dir%3);
-                this.y = (this.y-1);
+                this.x = (this.x + 1 - this.dir % 3);
+                this.y = (this.y - 1);
             } else if (this.type === 1) {
-                this.x = (this.x+2);
-                this.y = (this.y-this.dir%4);
-            }   
-            this.fly = (this.fly+1)%30;
+                this.x = (this.x + 2);
+                this.y = (this.y - this.dir % 4);
+            }
+            this.fly = (this.fly + 1) % 30;
         }
-    } 
+    }
 };
 
 class WordChoice extends Ufo {
@@ -376,25 +368,50 @@ class ufosPlay {
     } 
 };
 
+var GAME = "EXTRA_WORD"
 
 play1 = new ufosPlay;
 play2 = new wordsPlay;
+
+var game;
 
 function run() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "get_aim/0");
     xhr.onload = function () {
-    if (xhr.status === 200) {
-        const response = xhr.responseText;
-        aim_vector = JSON.parse(response);
+        if (xhr.status === 200) {
+            const response = xhr.responseText;
+            aim_vector = JSON.parse(response);
 
-        // console.log(aim_vector);
+            // console.log(aim_vector);
 
-        // if (calibration_step != 5) {
-        //     calibration(aim_vector);
-        // }
-        // else {
-            
+            if (calibration_step < 5) {
+                calibration(aim_vector);
+            }
+            else if (calibration_step == 5) {
+                switch (GAME) {
+                    case "TEST":
+                        setInterval(function () { draw_aim() }, 16);
+                        break;
+                    case "EXTRA_WORD":
+                        game = new ExtraWordGame();
+                        // game.prepare();
+                        setInterval(function () { game.draw() }, 16);
+                        break;
+                }
+                calibration_step = 6;
+            }
+            else {
+
+                var old_press = aimxy.press;
+                var press = aim_vector.press
+                aimxy = project(aim_vector);
+                aimxy.press = press;
+                aimxy.hold = old_press;
+                console.log(aimxy.press, aimxy.hold);
+            }
+            // else {
+
             // play1.draw(); //project(aim_vector)
             //}
         }
@@ -408,4 +425,4 @@ function run() {
 aimxy = { x: 200, y: 180, press: true, hold: true };
 setInterval(function() {play2.draw()}, 16);
 setInterval(run, 100);
-   
+

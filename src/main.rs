@@ -9,7 +9,6 @@ struct Aim {
     y: f64,
     z: f64,
     press: bool,
-    hold: bool,
 }
 
 impl Default for Aim {
@@ -19,7 +18,6 @@ impl Default for Aim {
             y: 0.0,
             z: 0.0,
             press: false,
-            hold: false,
         }
     }
 }
@@ -141,12 +139,9 @@ async fn send_image(path: web::Path<String>) -> impl Responder {
 
 #[post("/send_vector")]
 async fn get_vector(
-    // data: web::Path<String>,
     data: web::Json<Vector>,
     app_data: web::Data<AppState>,
 ) -> impl Responder {
-    println!("A");
-    // println!("{:?}", data);
     let mut raw_vectors = app_data.raw_vectors.lock().unwrap();
     let filter_window = &app_data.filter_window;
     
@@ -156,13 +151,6 @@ async fn get_vector(
     }
     
     let aim_vector = filter(&raw_vectors, filter_window);
-    
-    // TODO: Implement vector visualization if needed
-    // if DRAW_VECTORS {
-        //     vec_viz.draw_vector(aim_vector.x, aim_vector.y, aim_vector.z);
-        // }
-        
-        println!("{:?}", aim_vector);
         
         let mut aims = app_data.aims.lock().unwrap();
         if let Some(first_aim) = aims.get_mut(0) {
@@ -171,11 +159,9 @@ async fn get_vector(
                 y: aim_vector.y,
                 z: aim_vector.z,
                 press: aim_vector.press,
-                hold: false,
             };
         }
         
-        println!("B");
         HttpResponse::Ok().body("ok")
     }
 

@@ -27,7 +27,7 @@ function draw() {
 function run() {
     
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "get_data");
+    xhr.open("GET", "get_aim/0");
     xhr.onload = function () {
         if (xhr.status === 200) {
             const response = xhr.responseText;

@@ -64,7 +64,7 @@ def motion_control():
 
 @app.route("/get_aim/<id>")
 def get_aim(id):
-    return json.dumps(aims[id])
+    return json.dumps(aims[int(id)].__dict__)
 
 @app.route("/set_aim/<id>", methods=["POST"])
 def set_aim(id):
@@ -84,7 +84,7 @@ def send_script(script):
     return flask.send_file(f"js/{script}")
 
 @app.route("/img/<image>")
-def send_script(image):
+def send_image(image):
     return flask.send_file(f"img/{image}")
 
 @app.route("/send_vector", methods=["POST"])

@@ -1,14 +1,5 @@
 var aimxy = { x: 500, y: 500, press: false, hold: false };
 
-var aim = new Image();
-aim.src = "/img/aim.png";
-
-function draw_aim() {
-    ctx.fillStyle = "gray";
-    ctx.fillRect(0, 0, cvs.width, cvs.height);
-    ctx.drawImage(aim, aimxy.x, aimxy.y);
-}
-
 class Vector3 {
     constructor(x = 0, y = 0, z = 0) {
         this.x = x;
@@ -123,16 +114,12 @@ function project(aim_vector) {
     y = Math.min(y, 1);
     y = Math.floor(y * cvs.height);
 
-    console.log(x, y);
-
-    return {x: x, y: y};
+    return { x: x, y: y };
 }
 
 function calibration(aim_vector) {
-    console.log(calibration_step);
     switch (calibration_step) {
         case 0:
-            console.log("Starting step 0")
             ctx.fillStyle = "red";
             ctx.fillRect(0, 0, 100, 100);
             ctx.fillStyle = "blue";
@@ -143,7 +130,6 @@ function calibration(aim_vector) {
             break;
         case 1:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 1")
                 calibration_top_left = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -157,7 +143,6 @@ function calibration(aim_vector) {
             break;
         case 2:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 2")
                 calibration_top_right = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -171,7 +156,6 @@ function calibration(aim_vector) {
             break;
         case 3:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 3")
                 calibration_bottom_right = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -185,7 +169,6 @@ function calibration(aim_vector) {
             break;
         case 4:
             if (aim_vector.press && !aim_vector.hold) {
-                console.log("Starting step 4")
                 calibration_bottom_left = new Vector3(aim_vector.x, aim_vector.y, aim_vector.z);
                 ctx.fillStyle = "green";
                 ctx.fillRect(0, 0, 100, 100);
@@ -203,10 +186,9 @@ cvs.height = window.innerHeight; //координаты будут верные 
 cvs.width = window.innerWidth;
 var ctx = cvs.getContext("2d");
 ctx.imageSmoothingEnabled = false;
-var k = {x: window.innerHeight/240, y: window.innerWidth/256};
+var k = { x: window.innerHeight / 240, y: window.innerWidth / 256 };
 
 class Duck {
-    
     x;
     y;
     fly;
@@ -217,7 +199,7 @@ class Duck {
     bird = new Image();
     bgt = new Image();
     aim = new Image();
-    
+
     constructor(x, y, fly, col, type, dir) {
         this.x = x;
         this.y = y;
@@ -228,53 +210,53 @@ class Duck {
 
         this.bird.src = "/img/ducks.png";
     }
-    
+
     collisionCheck() {
-        if ((aimxy.x > this.x && aimxy.x < this.x + 30*k.x) && 
-            (aimxy.y > this.y && aimxy.y < this.y + 30*k.y)) {
+        if ((aimxy.x > this.x && aimxy.x < this.x + 30 * k.x) &&
+            (aimxy.y > this.y && aimxy.y < this.y + 30 * k.y)) {
             return true;
         }
         return false;
     }
-    
+
     flyDuck() {
-        if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -40*k.y)) {
-            this.x = (this.x-300*(this.type + 1))*(this.type - 1)%cvs.width;
-            this.type = this.type%2;
-            this.y = cvs.height-this.type*3*cvs.height/4;
-            this.col = (this.col + 1)%3; 
+        if ((this.x > cvs.width) || (this.y > cvs.height) || (this.y < -40 * k.y)) {
+            this.x = (this.x - 300 * (this.type + 1)) * (this.type - 1) % cvs.width;
+            this.type = this.type % 2;
+            this.y = cvs.height - this.type * 3 * cvs.height / 4;
+            this.col = (this.col + 1) % 3;
         }
         if ((aimxy.press === 1) && this.collisionCheck() && (this.type < 2)) {
             this.type = 2;
         } else if (aimxy.press === 1) {
-            this.dir = (this.dir + 1)%4;
+            this.dir = (this.dir + 1) % 4;
         }
         if (this.type === 100) {
-            ctx.drawImage(this.bird, 260-this.col-(1-this.col%2)*this.col/2, 0 + this.col*44, 25, 40, this.x, this.y, 36*k.x, 40*k.x);
+            ctx.drawImage(this.bird, 260 - this.col - (1 - this.col % 2) * this.col / 2, 0 + this.col * 44, 25, 40, this.x, this.y, 36 * k.x, 40 * k.x);
             this.y = (this.y + 3);
         } else if (this.type > 1) {
-            ctx.drawImage(this.bird, 220-this.col-(1-this.col%2)*this.col/2, 0 + this.col*44, 36, 40, this.x, this.y, 36*k.x, 40*k.x);
+            ctx.drawImage(this.bird, 220 - this.col - (1 - this.col % 2) * this.col / 2, 0 + this.col * 44, 36, 40, this.x, this.y, 36 * k.x, 40 * k.x);
             this.type = this.type + 1;
         } else {
-            ctx.drawImage(this.bird, 0 + (this.fly-this.fly%10)/10*36-this.col-(1-this.col%2)*this.col/2 + this.type*110, 0 + this.col*40, 36, 40, this.x, this.y, 36*k.x, 40*k.x);
+            ctx.drawImage(this.bird, 0 + (this.fly - this.fly % 10) / 10 * 36 - this.col - (1 - this.col % 2) * this.col / 2 + this.type * 110, 0 + this.col * 40, 36, 40, this.x, this.y, 36 * k.x, 40 * k.x);
             if (this.type === 0) {
-                this.x = (this.x+1-this.dir%3);
-                this.y = (this.y-1);
+                this.x = (this.x + 1 - this.dir % 3);
+                this.y = (this.y - 1);
             } else if (this.type === 1) {
-                this.x = (this.x+2);
-                this.y = (this.y-this.dir%4);
-            }   
-            this.fly = (this.fly+1)%30;
+                this.x = (this.x + 2);
+                this.y = (this.y - this.dir % 4);
+            }
+            this.fly = (this.fly + 1) % 30;
         }
-    } 
+    }
 };
 
 class ducksPlay {
 
-    ducks = [new Duck(cvs.width/4, cvs.height,   0, 0, 0, 1),
-             new Duck(0,           cvs.height/4, 0, 1, 1, 0),
-             new Duck(cvs.width/8, cvs.height,   0, 2, 0, 0),
-             new Duck(cvs.width/8, cvs.height/4, 0, 2, 2, 0)];
+    ducks = [new Duck(cvs.width / 4, cvs.height, 0, 0, 0, 1),
+    new Duck(0, cvs.height / 4, 0, 1, 1, 0),
+    new Duck(cvs.width / 8, cvs.height, 0, 2, 0, 0),
+    new Duck(cvs.width / 8, cvs.height / 4, 0, 2, 2, 0)];
 
     bg = new Image();
     bgt = new Image();
@@ -290,28 +272,47 @@ class ducksPlay {
         this.ducks.forEach(duck => duck.flyDuck());
         ctx.drawImage(this.bgt, 0, 0, 256, 190, 0, 0, cvs.width, cvs.height);
         ctx.drawImage(this.aim, aimxy.x, aimxy.y);
-    } 
+    }
 };
 
+var GAME = "EXTRA_WORD"
 
 play1 = new ducksPlay;
 // play2 = new wordsPlay;
+
+var game;
 
 function run() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "get_aim/0");
     xhr.onload = function () {
-    if (xhr.status === 200) {
-        const response = xhr.responseText;
-        aim_vector = JSON.parse(response);
+        if (xhr.status === 200) {
+            const response = xhr.responseText;
+            aim_vector = JSON.parse(response);
 
-        // console.log(aim_vector);
+            // console.log(aim_vector);
 
-        // if (calibration_step != 5) {
-        //     calibration(aim_vector);
-        // }
-        // else {
-            
+            if (calibration_step < 5) {
+                calibration(aim_vector);
+            }
+            else if (calibration_step == 5) {
+                switch (GAME) {
+                    case "TEST":
+                        setInterval(function () { draw_aim() }, 16);
+                        break;
+                    case "EXTRA_WORD":
+                        game = new ExtraWordGame();
+                        // game.prepare();
+                        setInterval(function () { game.draw() }, 16);
+                        break;
+                }
+                calibration_step = 6;
+            }
+            else {
+                aimxy = project(aim_vector);
+            }
+            // else {
+
             // play1.draw(); //project(aim_vector)
             //}
         }
@@ -323,6 +324,6 @@ function run() {
 }
 
 aimxy = { x: 200, y: 180, press: true, hold: true };
-setInterval(function() {play1.draw()}, 16);
+
 setInterval(run, 100);
-   
+

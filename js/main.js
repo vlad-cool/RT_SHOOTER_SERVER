@@ -426,8 +426,8 @@ class wordsPlay extends ufosPlay {
     }
 };
 
-var GAME = "EXTRA_WORD";
-var DISABLE_CALIBRATION = false;
+var GAME = "GAME_2";
+var DISABLE_CALIBRATION = true;
 
 //play1 = new ufosPlay;
 play2 = new ducksPlay([ new Duck(cvs.width / 4, cvs.height,     0, 0, 0, 1),
@@ -496,10 +496,10 @@ function run() {
                 }
                 console.log(aimxy.press, aimxy.hold);
             }
-            else {
+// else {
 
-            play1.draw(); //project(aim_vector)
-            }
+//             play1.draw(); //project(aim_vector)
+//             }
         }
         else {
             console.log("Failed to load data: " + xhr.status);

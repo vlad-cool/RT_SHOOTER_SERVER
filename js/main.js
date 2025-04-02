@@ -496,10 +496,6 @@ function run() {
                 }
                 console.log(aimxy.press, aimxy.hold);
             }
-// else {
-
-//             play1.draw(); //project(aim_vector)
-//             }
         }
         else {
             console.log("Failed to load data: " + xhr.status);

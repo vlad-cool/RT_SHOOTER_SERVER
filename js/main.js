@@ -1,5 +1,10 @@
 var aimxy = { x: 500, y: 500, press: false, hold: false };
 
+const FONT_SIZE = 48;
+const FRAME_OFFSET = 20;
+const HITBOX_OFFSET = 20;
+const HORIZONTAL_SLOTS = 4;
+const VERTICAL_SLOTS = 5;
 
 var aim = new Image();
 aim.src = "/img/aim.png";
@@ -464,6 +469,10 @@ function run() {
                         game = new ExtraWordGame();
                         setInterval(function () { game.draw() }, 16);
                         break;
+                    case "INSERT_WORD":
+                        game = new InsertWordGame();
+                        setInterval(function () { game.draw() }, 16);
+                        break;
                     case "GAME_2":
                         setInterval(function () { play2.draw() }, 16);
                         break;
@@ -481,8 +490,7 @@ function run() {
                     aimxy.press = press;
                     aimxy.hold = old_press;
                 }
-                else
-                {
+                else {
                     aimxy.press = false;
                     aimxy.hold = false;
                 }

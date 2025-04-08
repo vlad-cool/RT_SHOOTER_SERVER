@@ -95,6 +95,13 @@ async fn index() -> impl Responder {
         .body(include_str!("../templates/index.html"))
 }
 
+#[get("/admin_panel")]
+async fn admin_panel() -> impl Responder {
+    HttpResponse::Ok()
+        .content_type("text/html")
+        .body(include_str!("../templates/admin_panel.html"))
+}
+
 #[get("/motion_control")]
 async fn motion_control() -> impl Responder {
     HttpResponse::Ok()
@@ -132,6 +139,17 @@ async fn send_image(path: web::Path<String>) -> impl Responder {
     match std::fs::read(format!("./img/{}", image)) {
         Ok(content) => HttpResponse::Ok()
             .content_type(mime_guess::from_path(&image).first_or_octet_stream())
+            .body(content),
+        Err(_) => HttpResponse::NotFound().body("Image not found"),
+    }
+}
+
+#[get("/game/{name}")]
+async fn send_game(path: web::Path<String>) -> impl Responder {
+    let name: String = path.into_inner();
+    match std::fs::read(format!("./games/{}.json", name)) {
+        Ok(content) => HttpResponse::Ok()
+            .content_type(mime_guess::from_path(&name).first_or_octet_stream())
             .body(content),
         Err(_) => HttpResponse::NotFound().body("Image not found"),
     }
@@ -182,6 +200,7 @@ async fn main() -> std::io::Result<()> {
             .service(send_script)
             .service(send_image)
             .service(get_vector)
+            .service(send_game)
     })
     .bind("0.0.0.0:5000")?
     .run()

@@ -353,8 +353,7 @@ class Word extends Ufo {
             ctx.fillText(this.word, this.x+4*k.x, this.y+9*k.y);
             ctx.drawImage(this.bird, 1+(this.type-this.type%10)*4, 1, 39, 14, this.x, this.y, this.w * k.x * 1.5, this.h * k.y);
             
-            play35.score = play3.score;
-            play3 = play35;
+            play3;
         } else {
             this.type = 59; 
             ctx.fillText(this.word, this.x+4*k.x, this.y+9*k.y);
@@ -426,25 +425,23 @@ class wordsPlay extends ufosPlay {
     }
 };
 
-var GAME = "GAME_2";
-var DISABLE_CALIBRATION = true;
+var GAME = "GAME_3";
+var DISABLE_CALIBRATION = false;
 
 //play1 = new ufosPlay;
 play2 = new ducksPlay([ new Duck(cvs.width / 4, cvs.height,     0, 0, 0, 1),
                         new Duck(0,             cvs.height / 4, 0, 1, 1, 0),
                         new Duck(cvs.width / 8, cvs.height,     0, 2, 0, 0),
                         new Duck(cvs.width / 8, cvs.height / 4, 0, 2, 2, 0)]);
-wordsMass = ["amenity", "facility", "staff", "feature"]
-play3 = new wordsPlay("0. A feature or service that makes a place pleasant, comfortable or easy to live in",
+defMass = ["0. A feature or service that makes a place pleasant, comfortable or easy to live in",
+    "1. A building, service, equipment, etc. provided for a particular purpose",
+    "2. Used to refer to a substance, material, group of objects, etc. when you do not know the name,\n when the name is not important or when it is obvious what you are talking about",
+    "3. To look for something/somebody"]
+play3 = new wordsPlay(defMass[0],
                     [new Word(true,"amenity", cvs.width / 3.5, cvs.height / 4),
                     new Word(false,"facility", cvs.width / 3.5, cvs.height / 2),
-                    new Word(false,"staff", 3*cvs.width / 5, cvs.height / 4),
-                    new Word(false, "feature", 3*cvs.width / 5, cvs.height / 2)]);
-play35 = new wordsPlay("1. A feature or service that makes a place pleasant, comfortable or easy to live in",
-                        [new Word(false,"staff", cvs.width / 3.5, cvs.height / 4),
-                        new Word(false,"facility", cvs.width / 3.5, cvs.height / 2),
-                        new Word(true,"amenity", 3*cvs.width / 5, cvs.height / 4),
-                        new Word(false, "feature", 3*cvs.width / 5, cvs.height / 2)]);
+                    new Word(false,"stuff", 3*cvs.width / 5, cvs.height / 4),
+                    new Word(false,"seek", 3*cvs.width / 5, cvs.height / 2)]);
 var game;
 
 function run() {
@@ -505,6 +502,6 @@ function run() {
 }
 
 aimxy = { x: 400, y: 185, press: true, hold: true };
-//setInterval(function () { game.draw() }, 16);
+setInterval(function () { play3.draw() }, 16);
 setInterval(run, 100);
 

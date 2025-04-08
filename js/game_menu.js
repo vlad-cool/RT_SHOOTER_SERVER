@@ -7,23 +7,17 @@ function includes(a, b) {
     return false;
 }
 
-class ExtraWordGame {
-    word_groups = [];
+const AVAILABLE_GAMES = ["Insert word", "Extra word", "Ducks", "Game 3"];
+
+class GameMenu {
     aim = new Image();
     score = 0;
 
     generate_game() {
-        this.word_group = this.word_groups[Math.floor(Math.random() * (this.word_groups.length))]
-        this.bad_word_xn = -1;
-        this.bad_word_yn = -1;
-
         this.used_positions = [];
 
-        for (var i = 0; i < this.word_group.length; i++) {
-            var generated_position = -1;
-            do {
-                generated_position = [Math.floor(Math.random() * HORIZONTAL_SLOTS), Math.floor(Math.random() * VERTICAL_SLOTS)];
-            } while (includes(this.used_positions, generated_position) || generated_position[0] + generated_position[1] == 0);
+        for (var i = 0; i < AVAILABLE_GAMES.length; i++) {
+            var generated_position = [i % VERTICAL_SLOTS, Math.round(i / VERTICAL_SLOTS)];
             this.used_positions.push(generated_position);
         }
     }
@@ -36,11 +30,11 @@ class ExtraWordGame {
         ctx.fillRect(0, 0, cvs.width, cvs.height);
         ctx.font = `${FONT_SIZE}px serif`;
 
-        ctx.fillStyle = "blue";
-        ctx.fillText(`Score: ${this.score}`, (box_height - FONT_SIZE) / 2, box_height / 2 + FONT_SIZE / 2);
+        // ctx.fillStyle = "blue";
+        // ctx.fillText(`Score: ${this.score}`, (box_height - FONT_SIZE) / 2, box_height / 2 + FONT_SIZE / 2);
 
-        for (var i = 0; i < this.word_group.length; i++) {
-            var word = this.word_group[i];
+        for (var i = 0; i < AVAILABLE_GAMES.length; i++) {
+            var word = AVAILABLE_GAMES[i];
 
             var x_n = this.used_positions[i][0]
             var y_n = this.used_positions[i][1]
@@ -62,16 +56,7 @@ class ExtraWordGame {
                 aimxy.press && !aimxy.hold
             ) {
                 aimxy.hold = true;
-                if (i + 1 == this.word_group.length) {
-                    console.log("Success Hit");
-                    this.score += 100;
-                    this.generate_game();
-                }
-                else {
-                    this.score -= 200;
-                    this.score = Math.max(0, this.score);
-                    console.log("Bad Hit");
-                }
+                return AVAILABLE_GAMES[i];
             }
         }
         ctx.drawImage(aim, aimxy.x - aim.width / 2, aimxy.y - aim.height / 2);
@@ -79,19 +64,6 @@ class ExtraWordGame {
 
     constructor() {
         this.aim.src = "/img/aim.png";
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", "game/extra_word");
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const response = xhr.responseText;
-                this.word_groups = JSON.parse(response);
-            }
-            else {
-                console.log("Failed to load game: " + xhr.status);
-            }
-            this.generate_game();
-        }.bind(this);
-        xhr.send();
+        this.generate_game();
     }
 };

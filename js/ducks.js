@@ -5,7 +5,7 @@ mDef = ["0. A feature or service that makes a place pleasant, comfortable or eas
 mWords = [["amenity", "facility", "staff", "feature"],
 ["amenity", "facility", "staff", "feature"],
 ["amenity", "facility", "staff", "seek"],
-["amenity", "staff", "seek", "feature"]];
+["amenity", "seek", "staff", "feature"]];
 mAns = [0,1,3,2];
 j = 0;
 

@@ -238,14 +238,3 @@ class wordsPlay extends ufosPlay {
     }
 };
 
-//play1 = new ufosPlay;
-play2 = new ducksPlay([new Duck(cvs.width / 4, cvs.height, 0, 0, 0, 1),
-    new Duck(0, cvs.height / 4, 0, 1, 1, 0),
-    new Duck(cvs.width / 8, cvs.height, 0, 2, 0, 0),
-    new Duck(cvs.width / 8, cvs.height / 4, 0, 2, 2, 0)]);
-play3 = new wordsPlay(mDef[j],
-    [new Word((0 === mAns[j]), mWords[j][0], cvs.width / 3.5, cvs.height / 4),
-    new Word((1 === mAns[j]), mWords[j][1], cvs.width / 3.5, cvs.height / 2),
-    new Word((2 === mAns[j]), mWords[j][2], 3 * cvs.width / 5, cvs.height / 4),
-    new Word((3 === mAns[j]), mWords[j][3], 3 * cvs.width / 5, cvs.height / 2)]);
-j += 1;

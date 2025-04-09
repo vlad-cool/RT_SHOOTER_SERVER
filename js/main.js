@@ -8,6 +8,7 @@ const VERTICAL_SLOTS = 5;
 
 var aim = new Image();
 aim.src = "/img/aim.png";
+j = 0;
 
 function draw_aim() {
     ctx.fillStyle = "gray";
@@ -203,6 +204,23 @@ var ctx = cvs.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 var k = { x: window.innerHeight / 240, y: window.innerWidth / 256 };
 
+mDef = ["0. A feature or service that makes a place pleasant, comfortable or easy to live in",
+    "1. A building, service, equipment, etc. provided for a particular purpose",
+    "2. To look for something/somebody",
+    "3. All the workers employed in an organization considered as a group"];
+mWords = [["amenity", "facility", "staff", "feature"],
+["amenity", "facility", "staff", "feature"],
+["amenity", "facility", "staff", "seek"],
+["amenity", "staff", "seek", "feature"]];
+mAns = [0,1,3,2];
+play3 = new wordsPlay(mDef[j],
+    [new Word((0 === mAns[j]), mWords[j][0], cvs.width / 3.5, cvs.height / 4),
+    new Word((1 === mAns[j]), mWords[j][1], cvs.width / 3.5, cvs.height / 2),
+    new Word((2 === mAns[j]), mWords[j][2], 3 * cvs.width / 5, cvs.height / 4),
+    new Word((3 === mAns[j]), mWords[j][3], 3 * cvs.width / 5, cvs.height / 2)]);
+j += 1;
+var game;
+
 class Ufo {
 
     x;
@@ -353,8 +371,14 @@ class Word extends Ufo {
             ctx.fillText(this.word, this.x + 4 * k.x, this.y + 9 * k.y);
             ctx.drawImage(this.bird, 1 + (this.type - this.type % 10) * 4, 1, 39, 14, this.x, this.y, this.w * k.x * 1.5, this.h * k.y);
 
-            play35.score = play3.score;
-            play3 = play35;
+            if (j === mDef.length) {j = 0};
+
+            play3.def = mDef[j];
+            play3.ufos = [new Word((0 === mAns[j]), mWords[j][0], cvs.width / 3.5, cvs.height / 4),
+            new Word((1 === mAns[j]), mWords[j][1], cvs.width / 3.5, cvs.height / 2),
+            new Word((2 === mAns[j]), mWords[j][2], 3 * cvs.width / 5, cvs.height / 4),
+            new Word((3 === mAns[j]), mWords[j][3], 3 * cvs.width / 5, cvs.height / 2)];;
+            j += 1;
         } else {
             this.type = 59;
             ctx.fillText(this.word, this.x + 4 * k.x, this.y + 9 * k.y);
@@ -434,18 +458,6 @@ play2 = new ducksPlay([new Duck(cvs.width / 4, cvs.height, 0, 0, 0, 1),
 new Duck(0, cvs.height / 4, 0, 1, 1, 0),
 new Duck(cvs.width / 8, cvs.height, 0, 2, 0, 0),
 new Duck(cvs.width / 8, cvs.height / 4, 0, 2, 2, 0)]);
-wordsMass = ["amenity", "facility", "staff", "feature"]
-play3 = new wordsPlay("0. A feature or service that makes a place pleasant, comfortable or easy to live in",
-    [new Word(true, "amenity", cvs.width / 3.5, cvs.height / 4),
-    new Word(false, "facility", cvs.width / 3.5, cvs.height / 2),
-    new Word(false, "staff", 3 * cvs.width / 5, cvs.height / 4),
-    new Word(false, "feature", 3 * cvs.width / 5, cvs.height / 2)]);
-play35 = new wordsPlay("1. A feature or service that makes a place pleasant, comfortable or easy to live in",
-    [new Word(false, "staff", cvs.width / 3.5, cvs.height / 4),
-    new Word(false, "facility", cvs.width / 3.5, cvs.height / 2),
-    new Word(true, "amenity", 3 * cvs.width / 5, cvs.height / 4),
-    new Word(false, "feature", 3 * cvs.width / 5, cvs.height / 2)]);
-var game;
 
 function run() {
     const xhr = new XMLHttpRequest();
